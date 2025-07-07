@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infinity Earth</title>
+    <title>Infinity Earth - Transcending the Ordinary Mind</title>
     <style>
         * {
             margin: 0;
@@ -11,11 +11,40 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #1a1a1a;
+            --accent: #6b8dd6;
+            --accent-light: #8fa5df;
+            --text-light: #666;
+            --bg-light: #fafafa;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
-            color: #333;
+            color: var(--primary);
             overflow-x: hidden;
+            background: white;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            transition: all 0.1s ease;
+            z-index: 9999;
+            mix-blend-mode: difference;
+        }
+
+        .cursor.hover {
+            transform: scale(2);
+            background: var(--accent);
+            opacity: 0.5;
         }
 
         /* Navigation */
@@ -24,711 +53,667 @@
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
+            padding: 2rem 4rem;
             z-index: 1000;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            mix-blend-mode: difference;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 4rem;
+            mix-blend-mode: normal;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
 
         .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: 300;
-            letter-spacing: 2px;
-            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: white;
             text-decoration: none;
+            transition: var(--transition);
             cursor: pointer;
+        }
+
+        .navbar.scrolled .logo {
+            color: var(--primary);
         }
 
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 2rem;
+            gap: 3rem;
+            align-items: center;
         }
 
         .nav-links a {
             text-decoration: none;
-            color: #2c3e50;
-            font-weight: 300;
-            transition: color 0.3s ease;
-            letter-spacing: 1px;
+            color: white;
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            position: relative;
             cursor: pointer;
         }
 
-        .nav-links a:hover {
-            color: #3498db;
+        .navbar.scrolled .nav-links a {
+            color: var(--primary);
         }
 
-        .nav-links a.active {
-            color: #3498db;
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: var(--accent);
+            color: white !important;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(107, 141, 214, 0.3);
+            background: var(--accent-light);
+        }
+
+        /* Subscribe Modal */
+        .subscribe-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .subscribe-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .subscribe-modal-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            transform: translateY(30px);
+            transition: var(--transition);
+        }
+
+        .subscribe-modal.active .subscribe-modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--accent);
+        }
+
+        .subscribe-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .subscribe-description {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .subscribe-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .subscribe-input {
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .subscribe-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(107, 141, 214, 0.1);
+        }
+
+        .subscribe-button {
+            background: var(--accent);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .subscribe-button:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+        }
+
+        .subscribe-benefits {
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .subscribe-benefits h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .subscribe-benefits ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .subscribe-benefits li {
+            padding: 0.5rem 0;
+            color: var(--text-light);
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .subscribe-benefits li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 1rem;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Page Sections */
         .page-section {
             display: none;
             min-height: 100vh;
-            padding-top: 60px;
         }
 
         .page-section.active {
             display: block;
         }
 
-        /* HOME PAGE STYLES */
-        .home-page {
-            padding-top: 0;
-        }
-
-        /* Hero Section */
+        /* HERO SECTION */
         .hero {
             height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-                        url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/thomas-de-luze-NAZI4uks8uw-unsplash.jpg?raw=true') center/cover;
+            background: #1a1a1a;
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            color: white;
-            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+        }
+
+        .hero-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .hero-content {
-            max-width: 800px;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            max-width: 1200px;
             padding: 0 2rem;
-            animation: fadeInUp 1s ease-out;
         }
 
-        .hero-subtitle {
-            font-size: 0.9rem;
-            letter-spacing: 3px;
-            margin-bottom: 1rem;
-            opacity: 0.9;
-            text-transform: uppercase;
+        .hero-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .hero-title {
-            font-size: 3.5rem;
-            font-weight: 300;
-            line-height: 1.1;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            line-height: 1;
             margin-bottom: 2rem;
-            letter-spacing: 2px;
-            white-space: nowrap;
+            letter-spacing: -3px;
+            animation: fadeInUp 1s ease-out;
         }
 
-        .hero-description {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            font-weight: 300;
+        .hero-title span {
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
+        .hero-subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            opacity: 0.8;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        /* Interactive Scroll Indicator */
         .scroll-indicator {
             position: absolute;
             bottom: 2rem;
             left: 50%;
             transform: translateX(-50%);
-            color: white;
-            animation: bounce 2s infinite;
+            cursor: pointer;
         }
 
-        /* Featured Articles Section */
-        .featured-section {
-            padding: 2rem 0;
-        }
-
-        /* Blog Sections */
-        .blog-section {
-            min-height: 100vh;
-            padding: 5rem 2rem;
-            display: flex;
-            align-items: center;
+        .scroll-indicator-inner {
+            width: 30px;
+            height: 50px;
+            border: 2px solid white;
+            border-radius: 25px;
             position: relative;
+            opacity: 0.6;
         }
 
-        .blog-section:nth-child(even) {
-            background: #f8f9fa;
+        .scroll-indicator-dot {
+            width: 4px;
+            height: 8px;
+            background: white;
+            border-radius: 2px;
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: scroll 2s infinite;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
+        @keyframes scroll {
+            0% { transform: translateX(-50%) translateY(0); opacity: 0; }
+            40% { opacity: 1; }
+            80% { transform: translateX(-50%) translateY(20px); opacity: 0; }
+            100% { opacity: 0; }
         }
 
-        .blog-content {
-            padding: 2rem 0;
+        /* FEATURED ARTICLES SECTION */
+        .featured-section {
+            background: white;
+            padding: 6rem 0;
         }
 
-        .blog-number {
-            font-size: 8rem;
-            font-weight: 100;
-            color: rgba(0,0,0,0.1);
-            line-height: 1;
-            margin-bottom: 1rem;
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 5rem;
+            padding: 0 2rem;
         }
 
-        .blog-category {
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            color: #3498db;
+        .section-badge {
+            display: inline-block;
+            background: var(--bg-light);
+            color: var(--text-light);
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
             margin-bottom: 1rem;
             text-transform: uppercase;
-        }
-
-        .blog-title {
-            font-size: 2.5rem;
-            font-weight: 300;
-            margin-bottom: 1.5rem;
-            line-height: 1.3;
-            color: #2c3e50;
-        }
-
-        .blog-excerpt {
-            font-size: 1rem;
-            line-height: 1.8;
-            color: #7f8c8d;
-            margin-bottom: 2rem;
-        }
-
-        .read-more {
-            display: inline-flex;
-            align-items: center;
-            color: #3498db;
-            text-decoration: none;
-            font-weight: 400;
-            transition: all 0.3s ease;
             letter-spacing: 1px;
-            cursor: pointer;
         }
 
-        .read-more:hover {
-            color: #2980b9;
-            transform: translateX(5px);
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
         }
 
-        .read-more::after {
-            content: '→';
-            margin-left: 0.5rem;
-            transition: transform 0.3s ease;
-        }
-
-        .read-more:hover::after {
-            transform: translateX(3px);
-        }
-
-        .blog-image {
-            width: 100%;
-            height: 400px;
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-            background-size: cover;
-            background-position: center;
-        }
-
-        /* Featured Articles on Homepage */
-        .featured-section .blog-section:nth-child(1) .blog-image {
-            background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/love.jpg?raw=true');
-        }
-
-        .featured-section .blog-section:nth-child(2) .blog-image {
-            background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/networking.jpg?raw=true');
-        }
-
-        .featured-section .blog-section:nth-child(3) .blog-image {
-            background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/friends.jpg?raw=true');
-        }
-
-        /* Reverse layout for even sections */
-        .blog-section:nth-child(even) .container {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .blog-section:nth-child(even) .blog-content {
-            order: 2;
-        }
-
-        .blog-section:nth-child(even) .blog-image {
-            order: 1;
-        }
-
-        /* More Articles Section */
-        .more-articles {
-            background: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 4rem 2rem;
-        }
-
-        .more-articles-content {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .more-articles-title {
-            font-size: 2rem;
-            font-weight: 300;
-            margin-bottom: 2rem;
-            letter-spacing: 2px;
-        }
-
-        .more-articles-text {
+        .section-description {
             font-size: 1.1rem;
-            line-height: 1.7;
-            opacity: 0.9;
-            margin-bottom: 2rem;
+            color: var(--text-light);
+            line-height: 1.8;
         }
 
-        .cta-button {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: 400;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-            cursor: pointer;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
-        }
-
-        /* ARTICLES PAGE STYLES */
-        .articles-page {
-            background: #f8f9fa;
-            min-height: 100vh;
-            padding-top: 100px;
-        }
-
-        /* Articles Grid */
-        .articles-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-        }
-
+        /* Article Cards - Modern Style */
         .articles-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 2rem;
-            margin-bottom: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 4rem;
         }
 
         .article-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
             position: relative;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            transform: translateY(50px);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
         }
 
+        .article-card:nth-child(1) { animation-delay: 0.1s; }
+        .article-card:nth-child(2) { animation-delay: 0.2s; }
+        .article-card:nth-child(3) { animation-delay: 0.3s; }
+
         .article-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
         }
 
         .article-image {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 250px;
+            height: 100%;
             background-size: cover;
             background-position: center;
-            position: relative;
+            transition: var(--transition);
+        }
+
+        .article-card:hover .article-image {
+            transform: scale(1.1);
+        }
+
+        .article-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 3rem;
+            color: white;
         }
 
         .article-number {
+            font-size: 4rem;
+            font-weight: 700;
+            opacity: 0.1;
             position: absolute;
-            top: 1rem;
-            left: 1rem;
-            background: rgba(255,255,255,0.9);
-            color: #2c3e50;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .article-content {
-            padding: 2rem;
+            top: 2rem;
+            right: 2rem;
         }
 
         .article-category {
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            color: #3498db;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-
-        .article-title {
-            font-size: 1.5rem;
-            font-weight: 400;
-            margin-bottom: 1rem;
-            line-height: 1.4;
-            color: #2c3e50;
-        }
-
-        .article-excerpt {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #666;
-            margin-bottom: 1.5rem;
-        }
-
-        .article-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
             font-size: 0.85rem;
-            color: #999;
-        }
-
-        .read-time {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .read-more {
-            display: inline-flex;
-            align-items: center;
-            color: #3498db;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            letter-spacing: 1px;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-
-        .read-more:hover {
-            color: #2980b9;
-            transform: translateX(3px);
-        }
-
-        .read-more::after {
-            content: '→';
-            margin-left: 0.5rem;
-            transition: transform 0.3s ease;
-        }
-
-        .read-more:hover::after {
-            transform: translateX(3px);
-        }
-
-        /* Specific images for each article */
-        .article-card:nth-child(1) .article-image {
-            background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/love.jpg?raw=true');
-        }
-
-        .article-card:nth-child(2) .article-image {
-            background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/networking.jpg?raw=true');
-        }
-
-        .article-card:nth-child(3) .article-image {
-            background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/friends.jpg?raw=true');
-        }
-
-        .article-card:nth-child(4) .article-image {
-            background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/thomas-de-luze-NAZI4uks8uw-unsplash.jpg?raw=true');
-        }
-
-        .article-card:nth-child(5) .article-image {
-            background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/marek-piwnicki-yQS4S4lzSY4-unsplash.jpg?raw=true');
-        }
-
-        /* Featured Article - First Card Larger */
-        .article-card:first-child {
-            grid-column: span 2;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0;
-        }
-
-        .article-card:first-child .article-image {
-            height: 100%;
-        }
-
-        .article-card:first-child .article-content {
-            padding: 3rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .article-card:first-child .article-title {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .article-card:first-child .article-excerpt {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-        }
-
-        /* INDIVIDUAL ARTICLE PAGE STYLES */
-        .article-page {
-            background: white;
-            min-height: 100vh;
-            padding-top: 0;
-        }
-
-        /* Article Header */
-        .article-header {
-            height: 70vh;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4));
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            position: relative;
-            margin-top: 80px;
-        }
-
-        #article-1-page .article-header {
-            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-                            url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/love.jpg?raw=true');
-        }
-
-        #article-2-page .article-header {
-            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-                            url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/networking.jpg?raw=true');
-        }
-
-        #article-3-page .article-header {
-            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-                            url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/thomas-de-luze-NAZI4uks8uw-unsplash.jpg?raw=true');
-        }
-
-        #article-5-page .article-header {
-            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-                            url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/marek-piwnicki-yQS4S4lzSY4-unsplash.jpg?raw=true');
-        }
-
-        .header-content {
-            max-width: 800px;
-            padding: 0 2rem;
-            animation: fadeInUp 1s ease-out;
-        }
-
-        .article-category {
-            font-size: 0.9rem;
-            letter-spacing: 3px;
-            margin-bottom: 1rem;
-            opacity: 0.9;
             text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.8;
+            margin-bottom: 1rem;
         }
 
         .article-title {
             font-size: 1.8rem;
-            font-weight: 300;
+            font-weight: 700;
+            margin-bottom: 1rem;
             line-height: 1.2;
+        }
+
+        .article-excerpt {
+            font-size: 1rem;
+            opacity: 0.9;
+            line-height: 1.6;
             margin-bottom: 2rem;
-            letter-spacing: 2px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .article-meta {
             display: flex;
-            justify-content: center;
+            align-items: center;
             gap: 2rem;
             font-size: 0.9rem;
-            opacity: 0.9;
+            opacity: 0.8;
         }
 
-        /* Breadcrumb */
-        .breadcrumb {
-            background: #f8f9fa;
-            padding: 1rem 2rem;
+        .read-arrow {
+            position: absolute;
+            bottom: 3rem;
+            right: 3rem;
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            opacity: 0;
         }
 
-        .breadcrumb-container {
-            max-width: 1200px;
+        .article-card:hover .read-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .read-arrow::after {
+            content: '→';
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Quote Section */
+        .quote-section {
+            background: var(--bg-light);
+            padding: 6rem 0;
+            text-align: center;
+        }
+
+        .quote-container {
+            max-width: 1000px;
             margin: 0 auto;
+            padding: 0 2rem;
         }
 
-        .breadcrumb a {
-            color: #666;
-            text-decoration: none;
-            font-size: 0.9rem;
-            cursor: pointer;
+        .quote-text {
+            font-size: 2.5rem;
+            font-weight: 300;
+            line-height: 1.4;
+            margin-bottom: 2rem;
+            position: relative;
         }
 
-        .breadcrumb a:hover {
-            color: #3498db;
+        .quote-mark {
+            font-size: 6rem;
+            color: var(--accent);
+            opacity: 0.2;
+            position: absolute;
+            top: -2rem;
+            left: -4rem;
         }
 
-        /* Article Content */
-        .article-content {
+        .quote-author {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 8rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background-image: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 35px,
+                rgba(255,255,255,0.1) 35px,
+                rgba(255,255,255,0.1) 70px
+            );
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
             max-width: 800px;
             margin: 0 auto;
-            padding: 4rem 2rem;
+            padding: 0 2rem;
         }
 
-        .content-section {
-            margin-bottom: 2rem;
-        }
-
-        .content-section p {
-            font-size: 1.1rem;
-            line-height: 1.8;
+        .cta-title {
+            font-size: 3rem;
+            font-weight: 700;
             margin-bottom: 1.5rem;
-            color: #444;
+            letter-spacing: -1px;
         }
 
-        .content-section ul {
-            margin: 1.5rem 0;
-            padding-left: 2rem;
-        }
-
-        .content-section li {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 0.8rem;
-            color: #444;
-        }
-
-        .quote-box {
-            background: #f8f9fa;
-            border-left: 4px solid #3498db;
-            padding: 2rem;
-            margin: 3rem 0;
-            font-style: italic;
+        .cta-description {
             font-size: 1.2rem;
-            color: #2c3e50;
-        }
-
-        /* Related Articles */
-        .related-articles {
-            background: #f8f9fa;
-            padding: 4rem 2rem;
-        }
-
-        .related-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .related-title {
-            font-size: 2rem;
-            font-weight: 300;
-            text-align: center;
+            opacity: 0.9;
             margin-bottom: 3rem;
-            color: #2c3e50;
+            line-height: 1.8;
         }
 
-        .related-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .related-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-
-        .related-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .related-image {
-            width: 100%;
-            height: 200px;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .related-content {
-            padding: 1.5rem;
-        }
-
-        .related-card-title {
-            font-size: 1.2rem;
-            font-weight: 400;
-            margin-bottom: 1rem;
-            color: #2c3e50;
-        }
-
-        .related-excerpt {
-            font-size: 0.95rem;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-
-        /* Navigation Buttons */
-        .article-navigation {
-            background: white;
-            padding: 2rem;
-            border-top: 1px solid #eee;
-        }
-
-        .nav-buttons {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-button {
-            display: inline-flex;
-            align-items: center;
-            padding: 1rem 2rem;
-            background: #3498db;
+        .cta-button {
+            display: inline-block;
+            background: var(--accent);
             color: white;
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            font-weight: 600;
             text-decoration: none;
-            border-radius: 30px;
-            font-weight: 400;
-            transition: all 0.3s ease;
-            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .nav-button:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(107, 141, 214, 0.3);
         }
 
-        .nav-button.back {
-            background: #95a5a6;
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
         }
 
-        .nav-button.back:hover {
-            background: #7f8c8d;
+        .cta-button:hover::before {
+            left: 100%;
         }
 
-        .about-section {
-            background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(155, 89, 182, 0.05));
-            padding: 4rem 2rem;
-            border-radius: 12px;
-            margin-bottom: 4rem;
-        }
-
+        /* ABOUT PAGE */
         .about-hero {
             height: 60vh;
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
@@ -739,188 +724,407 @@
             text-align: center;
             color: white;
             position: relative;
-            margin-bottom: 4rem;
-            border-radius: 12px;
         }
 
-        .about-hero-content {
-            max-width: 600px;
-            padding: 0 2rem;
-        }
-
-        .about-hero-name {
-            font-size: 3rem;
-            font-weight: 300;
+        .about-hero-content h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: -2px;
             margin-bottom: 1rem;
-            letter-spacing: 3px;
+            animation: fadeInUp 1s ease-out;
         }
 
-        .about-hero-subtitle {
-            font-size: 1.1rem;
-            letter-spacing: 2px;
+        .about-hero-content p {
+            font-size: 1.2rem;
             opacity: 0.9;
-            font-weight: 300;
+            animation: fadeInUp 1s ease-out 0.2s both;
         }
 
         .about-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .about-intro {
+            font-size: 1.8rem;
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--primary);
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .about-section {
+            padding: 2rem;
+            background: var(--bg-light);
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .about-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .about-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .about-section p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+
+        .about-journey {
+            background: linear-gradient(135deg, rgba(107, 141, 214, 0.1), rgba(26, 26, 26, 0.05));
+            padding: 4rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .journey-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            letter-spacing: -1px;
+        }
+
+        .journey-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--text-light);
             max-width: 800px;
             margin: 0 auto;
         }
 
-        .about-section-title {
-            font-size: 2.5rem;
-            font-weight: 300;
-            text-align: center;
-            margin-bottom: 3rem;
-            color: #2c3e50;
-            letter-spacing: 2px;
-            position: relative;
-        }
-
-        .about-section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 2px;
-            background: #3498db;
-        }
-
-        .about-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #555;
-            margin-bottom: 2rem;
-            text-align: justify;
-        }
-
-        .about-text:first-of-type {
-            font-size: 1.2rem;
-            color: #2c3e50;
-            font-weight: 400;
-            margin-bottom: 3rem;
-            text-align: center;
-            font-style: italic;
-        }
-
-        .highlight {
-            background: linear-gradient(120deg, rgba(52, 152, 219, 0.1) 0%, rgba(52, 152, 219, 0.1) 100%);
-            padding: 0.2rem 0.4rem;
-            border-radius: 3px;
-        }
-
-        .quote-section {
-            padding: 4rem 2rem;
-            background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(155, 89, 182, 0.05));
-            margin: 4rem 0;
-            border-radius: 12px;
-        }
-
-        .quote-content {
-            max-width: 700px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .quote {
-            font-size: 1.3rem;
-            font-style: italic;
-            color: #2c3e50;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-            position: relative;
-        }
-
-        .quote::before,
-        .quote::after {
-            content: '"';
-            font-size: 2rem;
-            color: #3498db;
-            opacity: 0.7;
-        }
-
-        /* Connection Section */
-        .connection-section {
-            background: #2c3e50;
+        /* ARTICLES PAGE */
+        .articles-hero {
+            background: var(--primary);
             color: white;
+            padding: 8rem 0 4rem;
             text-align: center;
-            padding: 4rem 2rem;
         }
 
-        .connection-content {
+        .articles-hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: -2px;
+            margin-bottom: 1rem;
+        }
+
+        .articles-hero p {
+            font-size: 1.2rem;
+            opacity: 0.8;
             max-width: 600px;
             margin: 0 auto;
         }
 
-        .connection-title {
-            font-size: 2rem;
-            font-weight: 300;
-            margin-bottom: 2rem;
-            letter-spacing: 2px;
+        .articles-filter {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
         }
 
-        .connection-text {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            opacity: 0.9;
+        .filter-btn {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .articles-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem;
+        }
+
+        .articles-masonry {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .article-item {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .article-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .article-item-image {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .article-item-content {
+            padding: 2rem;
+        }
+
+        .article-item-category {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .article-item-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .article-item-excerpt {
+            font-size: 1rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* INDIVIDUAL ARTICLE PAGES */
+        .article-header {
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .article-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6));
+        }
+
+        .article-header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            padding: 0 2rem;
+        }
+
+        .article-header-category {
+            display: inline-block;
+            background: var(--accent);
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
             margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .article-header-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+            letter-spacing: -1px;
+        }
+
+        .article-header-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .article-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .article-content p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .article-content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 3rem 0 1.5rem;
+            color: var(--primary);
+        }
+
+        .article-quote {
+            background: #fafafa;
+            border-left: 4px solid var(--accent);
+            padding: 2rem;
+            margin: 3rem 0;
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--primary);
+        }
+
+        .article-nav {
+            background: #fafafa;
+            padding: 3rem 0;
+        }
+
+        .article-nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .article-nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            background: white;
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 500;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .article-nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
 
         /* Footer */
         .footer {
-            background: #1a252f;
+            background: var(--primary);
             color: white;
-            text-align: center;
-            padding: 3rem 2rem;
+            padding: 4rem 0 2rem;
         }
 
         .footer-content {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
         }
 
-        .footer-title {
-            font-size: 1.5rem;
-            font-weight: 300;
+        .footer-brand h3 {
+            font-size: 2rem;
             margin-bottom: 1rem;
-            letter-spacing: 2px;
+            letter-spacing: -1px;
         }
 
-        .footer-text {
-            font-size: 1rem;
+        .footer-brand p {
             opacity: 0.8;
-            margin-bottom: 2rem;
             line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .footer-column h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
         }
 
         .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
         }
 
         .footer-links a {
             color: white;
             text-decoration: none;
             opacity: 0.8;
-            transition: opacity 0.3s ease;
-            letter-spacing: 1px;
-            cursor: pointer;
+            transition: var(--transition);
         }
 
         .footer-links a:hover {
             opacity: 1;
+            padding-left: 5px;
         }
 
         .footer-bottom {
             border-top: 1px solid rgba(255,255,255,0.1);
             padding-top: 2rem;
-            font-size: 0.9rem;
+            text-align: center;
             opacity: 0.6;
+            font-size: 0.9rem;
         }
 
         /* Animations */
@@ -935,1024 +1139,1047 @@
             }
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateX(-50%) translateY(0);
-            }
-            40% {
-                transform: translateX(-50%) translateY(-10px);
-            }
-            60% {
-                transform: translateX(-50%) translateY(-5px);
-            }
+        /* Loading Animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
         }
 
-        /* Responsive Design */
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-inner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--bg-light);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .nav-container {
-                padding: 0 1rem;
+            .navbar {
+                padding: 1.5rem 2rem;
             }
 
             .nav-links {
-                gap: 1rem;
+                gap: 1.5rem;
             }
 
             .hero-title {
-                font-size: 2.5rem;
-                white-space: normal;
+                font-size: 3rem;
             }
 
-            .about-hero-name {
-                font-size: 2.5rem;
+            .articles-grid {
+                grid-template-columns: 1fr;
+                padding: 0 2rem;
             }
 
-            .section-title {
-                font-size: 2.5rem;
-            }
-
-            .container {
+            .about-grid {
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
 
-            .blog-section:nth-child(even) .blog-content {
-                order: 1;
-            }
-
-            .blog-section:nth-child(even) .blog-image {
-                order: 2;
-            }
-
-            .blog-number {
-                font-size: 4rem;
-            }
-
-            .blog-title {
-                font-size: 2rem;
-            }
-
-            .about-text {
-                text-align: left;
-            }
-
-            /* Articles grid responsive */
-            .articles-grid {
+            .footer-content {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
+                gap: 2rem;
             }
 
-            .article-card:first-child {
-                grid-column: span 1;
-                display: block;
-            }
-
-            .article-card:first-child .article-content {
-                padding: 2rem;
-            }
-
-            .article-card:first-child .article-title {
-                font-size: 1.5rem;
-            }
-
-            .article-card:first-child .article-excerpt {
-                font-size: 0.95rem;
-            }
-
-            /* Individual article pages responsive */
-            .article-title {
-                font-size: 2.5rem;
-            }
-
-            .article-meta {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .nav-buttons {
+            .article-nav-container {
                 flex-direction: column;
                 gap: 1rem;
             }
 
-            .related-grid {
-                grid-template-columns: 1fr;
+            .subscribe-modal-content {
+                padding: 2rem;
             }
         }
 
-        /* Smooth scrolling */
+        /* Smooth Scrolling */
         html {
             scroll-behavior: smooth;
         }
 
-        /* Intersection Observer animations */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .fade-in-scroll {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-
-        .fade-in-scroll.visible {
-            opacity: 1;
-            transform: translateY(0);
+        /* Selection Color */
+        ::selection {
+            background: var(--accent);
+            color: white;
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-inner"></div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+
+    <!-- Subscribe Modal -->
+    <div class="subscribe-modal" id="subscribeModal">
+        <div class="subscribe-modal-content">
+            <button class="modal-close" onclick="closeSubscribeModal()">&times;</button>
+            <h2 class="subscribe-title">Join Our Community</h2>
+            <p class="subscribe-description">Be the first to receive new articles on consciousness, personal growth, and transformation. Join thousands of readers on their journey of self-discovery.</p>
+            
+            <form class="subscribe-form" id="subscribeForm">
+                <input type="email" class="subscribe-input" placeholder="Your email address" required>
+                <button type="submit" class="subscribe-button">Subscribe to Infinity Earth</button>
+            </form>
+
+            <div class="subscribe-benefits">
+                <h4>What you'll receive:</h4>
+                <ul>
+                    <li>Weekly insights on consciousness and personal growth</li>
+                    <li>Exclusive early access to new articles</li>
+                    <li>Monthly reflection guides and exercises</li>
+                    <li>Community discussions and Q&A sessions</li>
+                </ul>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <h3>🎉 Welcome to the Journey!</h3>
+                <p>Thank you for subscribing! You'll receive a welcome email shortly with your first insights on consciousness and transformation.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a class="logo" onclick="showHomePage()">INFINITY EARTH</a>
+            <a href="#" class="logo" onclick="showHomePage()">INFINITY EARTH</a>
             <ul class="nav-links">
-                <li><a onclick="showHomePage()" id="nav-home">Home</a></li>
-                <li><a onclick="showArticlesPage()" id="nav-articles">Articles</a></li>
-                <li><a onclick="showAboutPage()" id="nav-about">About</a></li>
+                <li><a href="#" onclick="showHomePage()" id="nav-home" class="active">Home</a></li>
+                <li><a href="#" onclick="showArticlesPage()" id="nav-articles">Articles</a></li>
+                <li><a href="#" onclick="showAboutPage()" id="nav-about">About</a></li>
+                <li><a href="#" class="nav-cta" onclick="openSubscribeModal()">Subscribe</a></li>
             </ul>
         </div>
     </nav>
 
     <!-- HOME PAGE -->
-    <section id="home-page" class="page-section home-page active">
+    <section id="home-page" class="page-section active">
         <!-- Hero Section -->
         <section class="hero">
+            <div class="hero-bg">
+                <img src="https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/thomas-de-luze-NAZI4uks8uw-unsplash.jpg?raw=true" alt="Hero Background">
+            </div>
             <div class="hero-content">
-                <div class="hero-subtitle">Thoughts that reached 20,000+ readers</div>
-                <h1 class="hero-title">Transcending the Ordinary Mind</h1>
-                <p class="hero-description">Thoughts on consciousness, relationships, and society from someone walking the path of inner transformation.</p>
+                <div class="hero-badge">20,000+ Readers Worldwide</div>
+                <h1 class="hero-title"><span>Inner Peace is Possible,</span><br>Even Now</h1>
+                <p class="hero-subtitle">Thoughts from someone walking the path of inner transformation.</p>
             </div>
             <div class="scroll-indicator">
-                <div>↓</div>
+                <div class="scroll-indicator-inner">
+                    <div class="scroll-indicator-dot"></div>
+                </div>
             </div>
         </section>
 
-        <!-- Featured Articles Section -->
+        <!-- Featured Articles -->
         <section class="featured-section">
-            <!-- Blog Section 1 -->
-            <div class="blog-section">
-                <div class="container">
-                    <div class="blog-content fade-in">
-                        <div class="blog-number">01</div>
-                        <div class="blog-category">Personal Growth</div>
-                        <h2 class="blog-title">Transcending Lust: The Path to Higher Forms of Love</h2>
-                        <p class="blog-excerpt">
-                            Humans need to learn higher forms of love through experiencing lust and desire. 
-                        </p>
-                        <a class="read-more" onclick="showArticle1()">Read More</a>
-                    </div>
-                    <div class="blog-image fade-in"></div>
-                </div>
+            <div class="section-header">
+                <span class="section-badge">Featured Articles</span>
+                <h2 class="section-title">When Everything Feels Overwhelming</h2>
+                <p class="section-description">Deep insights and gentle wisdom that bring calm to your heart</p>
             </div>
 
-            <!-- Blog Section 2 -->
-            <div class="blog-section">
-                <div class="container">
-                    <div class="blog-content fade-in">
-                        <div class="blog-number">02</div>
-                        <div class="blog-category">Personal Growth</div>
-                        <h2 class="blog-title">Networking Up Begins with Self-Improvement</h2>
-                        <p class="blog-excerpt">
-                            The people in your life resonate at a frequency similar to your own. You naturally 
-                            attract those who share your vibration.  
-                        </p>
-                        <a class="read-more" onclick="showArticle2()">Read More</a>
-                    </div>
-                    <div class="blog-image fade-in"></div>
-                </div>
-            </div>
-
-            <!-- Blog Section 3 -->
-            <div class="blog-section">
-                <div class="container">
-                    <div class="blog-content fade-in">
-                        <div class="blog-number">03</div>
-                        <div class="blog-category">Societal Reflection</div>
-                        <h2 class="blog-title">The Judging Mind: The Root of Inequality</h2>
-                        <p class="blog-excerpt">
-                            As long as the judging mind exists in people,  inequality will persist. 
-                        </p>
-                        <a class="read-more" onclick="showArticle3()">Read More</a>
-                    </div>
-                    <div class="blog-image fade-in"></div>
-                </div>
-            </div>
-
-           
-        </section>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-content">
-                <h3 class="footer-title">Join the Journey</h3>
-                <p class="footer-text">
-                    Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.
-                </p>
-                <div class="footer-links">
-                    <a onclick="showHomePage()">Home</a>
-                    <a onclick="showArticlesPage()">Articles</a>
-                    <a onclick="showAboutPage()">About</a>
-                    <a href="#">Contact</a>
-                </div>
-                <div class="footer-bottom">
-                    © 2025 Infinity Earth. 
-                </div>
-            </div>
-        </footer>
-    </section>
-
-    <!-- ARTICLE 1 PAGE -->
-    <section id="article-1-page" class="page-section article-page">
-        <!-- Breadcrumb -->
-        <div class="breadcrumb">
-            <div class="breadcrumb-container">
-                <a onclick="showHomePage()">Home</a> / <a onclick="showArticlesPage()">Articles</a> / Transcending Lust: The Path to Higher Forms of Love
-            </div>
-        </div>
-
-        <!-- Article Header -->
-        <section class="article-header">
-            <div class="header-content">
-                <div class="article-category">Personal Growth</div>
-                <h1 class="article-title">Transcending Lust: The Path to Higher Forms of Love</h1>
-                <div class="article-meta">
-                    <span>📅 Published: January 2025</span>
-                    <span>📖 5 min read</span>
-                    <span>💭 Jacqueline Yi</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Article Content -->
-        <article class="article-content">
-            <div class="content-section fade-in">
-                <p>Humans need to learn higher forms of love through experiencing lust and desire.</p>
-                
-                <p>The prevalent form of love in contemporary human society is rooted in physical attraction, lust, and desire which primarily aims at self-satisfaction and stems from our animalistic nature.</p>
-                
-                <p>Such relationships are often accompanied by pain and distress.</p>
-                
-                <p>However, lust should not be dismissed—it has its purpose.</p>
-            </div>
-
-            <div class="quote-box fade-in">
-                "Humans evolve from desire-based relationships to higher level connections, merging the mind, spirit, and soul."
-            </div>
-
-            <div class="content-section fade-in">
-                <p>Humans evolve from desire-based relationships to higher level connections, merging the mind, spirit, and soul. This journey of learning through desire is a critical lesson.</p>
-                
-                <p>A meaningful relationship may begin with physical attraction but can grow into a higher-dimensional bond:</p>
-                
-                <ul>
-                    <li>Supporting each other during life's challenges.</li>
-                    <li>Seeing and becoming the best version of oneself.</li>
-                    <li>Nourishing the soul and enabling personal growth.</li>
-                </ul>
-                
-                <p>This applies to all relationships.</p>
-                
-                <p>For relationships to be long-lasting, they must elevate in their energy.</p>
-                
-                <p>Remaining solely in the realm of lustful love is unstable. Even if the relationship doesn't end, it lacks vitality internally.</p>
-                
-                <p>At an even higher level, a relationship is no longer just for the benefit of two individuals. It becomes a partnership aimed at creating something greater and benefiting others.</p>
-                
-                <p>Love rooted in ego and self-interest brings pain. But through this, we can ascend toward true love—an unconditional, compassionate, and selfless love.</p>
-                
-                <p>Low-energy intimate relationships are an important pathway for human growth.</p>
-                
-                <p>Nothing is inherently good or bad. For a wise person, every experience becomes an opportunity to grow.</p>
-            </div>
-        </article>
-
-        <!-- Related Articles -->
-        <section class="related-articles">
-            <div class="related-container">
-                <h2 class="related-title">Related Articles</h2>
-                <div class="related-grid">
-                    <div class="related-card" onclick="showArticle2()">
-                        <div class="related-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/networking.jpg?raw=true');"></div>
-                        <div class="related-content">
-                            <h3 class="related-card-title">Networking Up Begins with Self-Improvement</h3>
-                            <p class="related-excerpt">The people in your life resonate at a frequency similar to your own. Discover how self-improvement naturally elevates your social circle.</p>
-                            <a class="read-more">Read More →</a>
-                        </div>
-                    </div>
-                    <div class="related-card" onclick="showArticle3()">
-                        <div class="related-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/friends.jpg?raw=true');"></div>
-                        <div class="related-content">
-                            <h3 class="related-card-title">The Judging Mind: The Root of Inequality</h3>
-                            <p class="related-excerpt">At their source, all things in the universe are equal. Explore how the judging mind creates artificial divisions and suffering.</p>
-                            <a class="read-more">Read More →</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Article Navigation -->
-        <div class="article-navigation">
-            <div class="nav-buttons">
-                <a class="nav-button back" onclick="showArticlesPage()">← Back to Articles</a>
-                <a class="nav-button" onclick="showArticle2()">Next Article →</a>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-content">
-                <h3 class="footer-title">Join the Journey</h3>
-                <p class="footer-text">
-                    Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.
-                </p>
-                <div class="footer-links">
-                    <a onclick="showHomePage()">Home</a>
-                    <a onclick="showArticlesPage()">Articles</a>
-                    <a onclick="showAboutPage()">About</a>
-                    <a href="#">Contact</a>
-                </div>
-                <div class="footer-bottom">
-                    © 2025 Infinity Earth. Walking the path of transformation together.
-                </div>
-            </div>
-        </footer>
-    </section>
-
-    <!-- ARTICLE 2 PAGE -->
-    <section id="article-2-page" class="page-section article-page">
-        <!-- Breadcrumb -->
-        <div class="breadcrumb">
-            <div class="breadcrumb-container">
-                <a onclick="showHomePage()">Home</a> / <a onclick="showArticlesPage()">Articles</a> / Networking Up Begins with Self-Improvement
-            </div>
-        </div>
-
-        <!-- Article Header -->
-        <section class="article-header">
-            <div class="header-content">
-                <div class="article-category">Personal Growth</div>
-                <h1 class="article-title">Networking Up Begins with Self-Improvement</h1>
-                <div class="article-meta">
-                    <span>📅 Published: January 2025</span>
-                    <span>📖 4 min read</span>
-                    <span>💭 Jacqueline Yi</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Article Content -->
-        <article class="article-content">
-            <div class="content-section fade-in">
-                <p><strong>1. The people in your life resonate at a frequency similar to your own.</strong></p>
-                
-                <p>You naturally attract, and are attracted to, those who share your vibration. If you find yourself dissatisfied with the people around you, the first step is to look inward and change yourself.</p>
-                
-                <p>While this is often called "networking up," it's really about self-improvement. As you better yourself, your social circle will naturally elevate with you.</p>
-            </div>
-
-            <div class="quote-box fade-in">
-                "As you better yourself, your social circle will naturally elevate with you."
-            </div>
-
-            <div class="content-section fade-in">
-                <p><strong>2. Seize the opportunity to make genuine friends while you're young.</strong></p>
-                
-                <p>This is why it's so important to make genuine friends while you're young. This isn't to say professional networking is unimportant; later in life, networking for resource exchange becomes inevitable.</p>
-                
-                <p>At that stage, connections are often built on the social value you provide. It becomes a transactional exchange, and the opportunity to make true friends diminishes.</p>
-                
-                <p><strong>3. On a deeper level, the people around you are mirrors reflecting parts of yourself.</strong></p>
-                
-                <p>You'll notice that your friends often share your traits. If a quality in someone strongly attracts you, it's likely a quality you either possess or wish you had.</p>
-                
-                <p>Conversely, if you strongly dislike a trait in others, you may dislike that same trait in yourself. Gaining this level of self-awareness requires introspection and isn't always obvious.</p>
-                
-                <p><strong>4. If socializing is something you enjoy, then fully embrace it.</strong></p>
-                
-                <p>Ultimately, the key is to be authentic. If you enjoy socializing, embrace it. If you prefer solitude, follow your heart.</p>
-                
-                <p>When you focus on what you love and excel at it, people who resonate with your frequency will naturally gravitate toward you.</p>
-            </div>
-        </article>
-
-        <!-- Related Articles -->
-        <section class="related-articles">
-            <div class="related-container">
-                <h2 class="related-title">Related Articles</h2>
-                <div class="related-grid">
-                    <div class="related-card" onclick="showArticle1()">
-                        <div class="related-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/love.jpg?raw=true');"></div>
-                        <div class="related-content">
-                            <h3 class="related-card-title">Transcending Lust: The Path to Higher Forms of Love</h3>
-                            <p class="related-excerpt">Explore how we can evolve from desire-based relationships to higher-dimensional connections that merge mind, spirit, and soul.</p>
-                            <a class="read-more">Read More →</a>
-                        </div>
-                    </div>
-                    <div class="related-card" onclick="showArticle3()">
-                        <div class="related-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/friends.jpg?raw=true');"></div>
-                        <div class="related-content">
-                            <h3 class="related-card-title">The Judging Mind: The Root of Inequality</h3>
-                            <p class="related-excerpt">At their source, all things in the universe are equal. Explore how the judging mind creates artificial divisions and suffering.</p>
-                            <a class="read-more">Read More →</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Article Navigation -->
-        <div class="article-navigation">
-            <div class="nav-buttons">
-                <a class="nav-button back" onclick="showArticle1()">← Previous Article</a>
-                <a class="nav-button" onclick="showArticle3()">Next Article →</a>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-content">
-                <h3 class="footer-title">Join the Journey</h3>
-                <p class="footer-text">
-                    Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.
-                </p>
-                <div class="footer-links">
-                    <a onclick="showHomePage()">Home</a>
-                    <a onclick="showArticlesPage()">Articles</a>
-                    <a onclick="showAboutPage()">About</a>
-                    <a href="#">Contact</a>
-                </div>
-                <div class="footer-bottom">
-                    © 2025 Infinity Earth. Walking the path of transformation together.
-                </div>
-            </div>
-        </footer>
-    </section>
-
-    <!-- ARTICLE 3 PAGE -->
-    <section id="article-3-page" class="page-section article-page">
-        <!-- Breadcrumb -->
-        <div class="breadcrumb">
-            <div class="breadcrumb-container">
-                <a onclick="showHomePage()">Home</a> / <a onclick="showArticlesPage()">Articles</a> / The Judging Mind: The Root of Inequality
-            </div>
-        </div>
-
-        <!-- Article Header -->
-        <section class="article-header">
-            <div class="header-content">
-                <div class="article-category">Societal Reflection</div>
-                <h1 class="article-title">The Judging Mind: The Root of Inequality</h1>
-                <div class="article-meta">
-                    <span>📅 Published: January 2025</span>
-                    <span>📖 6 min read</span>
-                    <span>💭 Jacqueline Yi</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Article Content -->
-        <article class="article-content">
-            <div class="content-section fade-in">
-                <p>At their source, all things in the universe are equal. They are without inherent distinction—no high or low, no superior or inferior.</p>
-                
-                <p>Equality does not mean that everything is a carbon copy. It means seeing the world without a judging mind, without creating arbitrary divisions.</p>
-                
-                <p>For example, the existence of different skin tones is an objective reality. But the human-made standards that label one as "inferior" are subjective. The universe itself makes no such judgments.</p>
-            </div>
-
-            <div class="quote-box fade-in">
-                "As long as this judging mind exists in people, inequality will persist."
-            </div>
-
-            <div class="content-section fade-in">
-                <p>As long as this judging mind exists in people, inequality will persist.</p>
-                
-                <p>Even if we were to achieve perfect economic equality, the judging mind would remain. It would simply find other traits, like physical appearance, to create new hierarchies of "superior" and "inferior."</p>
-                
-                <p>We usually try to fix inequality on the material level. But the judging mind is not a material problem; it exists on the plane of spirit and consciousness.</p>
-                
-                <p>Addressing this will be the great challenge of the coming age. We can only await its unfolding.</p>
-            </div>
-        </article>
-
-        <!-- Related Articles -->
-        <section class="related-articles">
-            <div class="related-container">
-                <h2 class="related-title">Related Articles</h2>
-                <div class="related-grid">
-                    <div class="related-card" onclick="showArticle1()">
-                        <div class="related-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/love.jpg?raw=true');"></div>
-                        <div class="related-content">
-                            <h3 class="related-card-title">Transcending Lust: The Path to Higher Forms of Love</h3>
-                            <p class="related-excerpt">Explore how we can evolve from desire-based relationships to higher-dimensional connections that merge mind, spirit, and soul.</p>
-                            <a class="read-more">Read More →</a>
-                        </div>
-                    </div>
-                    <div class="related-card" onclick="showArticle2()">
-                        <div class="related-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/networking.jpg?raw=true');"></div>
-                        <div class="related-content">
-                            <h3 class="related-card-title">Networking Up Begins with Self-Improvement</h3>
-                            <p class="related-excerpt">The people in your life resonate at a frequency similar to your own. Discover how self-improvement naturally elevates your social circle.</p>
-                            <a class="read-more">Read More →</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Article Navigation -->
-        <div class="article-navigation">
-            <div class="nav-buttons">
-                <a class="nav-button back" onclick="showArticle2()">← Previous Article</a>
-                <a class="nav-button" onclick="showArticle4()">Next Article →</a>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-content">
-                <h3 class="footer-title">Join the Journey</h3>
-                <p class="footer-text">
-                    Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.
-                </p>
-                <div class="footer-links">
-                    <a onclick="showHomePage()">Home</a>
-                    <a onclick="showArticlesPage()">Articles</a>
-                    <a onclick="showAboutPage()">About</a>
-                    <a href="#">Contact</a>
-                </div>
-                <div class="footer-bottom">
-                    © 2025 Infinity Earth. Walking the path of transformation together.
-                </div>
-            </div>
-        </footer>
-    </section>
-
-    <!-- ARTICLE 4 PAGE (New Article) -->
-    <section id="article-4-page" class="page-section article-page">
-        <!-- Breadcrumb -->
-        <div class="breadcrumb">
-            <div class="breadcrumb-container">
-                <a onclick="showHomePage()">Home</a> / <a onclick="showArticlesPage()">Articles</a> / Life is ultimately a solo journey
-            </div>
-        </div>
-
-        <!-- Article Header -->
-        <section class="article-header">
-            <div class="header-content">
-                <div class="article-category">Personal Growth</div>
-                <h1 class="article-title">Life is ultimately a solo journey</h1>
-                <div class="article-meta">
-                    <span>📅 Published: January 2025</span>
-                    <span>📖 5 min read</span>
-                    <span>💭 Jacqueline Yi</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Article Content -->
-        <article class="article-content">
-            <div class="content-section fade-in">
-                <p><strong>1. Living your own life well is the prerequisite for any healthy relationship.</strong></p>
-                
-                <p>A good relationship means two people inspiring each other to become better. Only when you're in an uplifted state can you attract kindred spirits.</p>
-                
-                <p>When you're in a low state, you're more likely to attract toxic relationships. They're often clouded by possessiveness, obsession, and jealousy. These low-energy connections usually bring pain.</p>
-                
-                <p>When your soul is truly fulfilled, you'll realize that a good partner is a companion for mutual growth, not someone you cling to because you can't stand being alone.</p>
-                
-                <p>A fulfilling relationship is built by two grounded, emotionally stable individuals who support and empower each other to become the best version of themselves.</p>
-                
-                <p>But a toxic relationship often traps both in a cycle of taking. You know others can't give you what you need, yet you stay stuck because you're scared to walk away.</p>
-            
-                <p>When you're inwardly adrift, lacking love, attention, or validation, you grasp outward—hoping someone else will give you steady, unchanging love.</p>
-        
-
-            <div class="content-section fade-in">
-                <p><strong>2. What you seek is already within you.</strong></p>
-                
-                <p>When you're inwardly adrift, lacking love, attention, or validation, you grasp outward—hoping someone else will give you steady, unchanging love. You grow anxious over every reaction, every gesture. This may trap you in a toxic relationship, unable to leave.</p>
-                
-                <p>Looking outside for salvation, but everything is impermanent. Even if you grasp it briefly, you'll handle it with anxious care, trading away pieces of yourself just to hold on.</p>
-                
-                <p><strong>3. No one will live your life for you. You hold the reins of your own existence.</strong></p>
-                
-                <p>Don't wait for a savior to pull you from life's mud or emotional quicksand. The only one who can do this is yourself. You don't have to be perfect. It's okay to stumble sometimes. True, quality companions often appear when you're living earnestly, boldly being yourself and striving upward.</p>
-                
-                <p><strong>4. No matter who you live with or how close you are, life is ultimately lived alone.</strong></p>
-                
-                <p>Life, at its core, is a solo journey. No one can live it for you. Treasure the connections that cross your path. Then, carrying all the lessons, growth, love, and courage, begin the next journey.</p>
-                
-                <p><strong>"My heart is luminous—what more is there to say?"</strong></p>
-            </div>
-        </article>
-
-        <!-- Related Articles -->
-        <section class="related-articles">
-            <div class="related-container">
-                <h2 class="related-title">Related Articles</h2>
-                <div class="related-grid">
-                    <div class="related-card" onclick="showArticle2()">
-                        <div class="related-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/networking.jpg?raw=true');"></div>
-                        <div class="related-content">
-                            <h3 class="related-card-title">Networking Up Begins with Self-Improvement</h3>
-                            <p class="related-excerpt">The people in your life resonate at a frequency similar to your own. Discover how self-improvement naturally elevates your social circle.</p>
-                            <a class="read-more">Read More →</a>
-                        </div>
-                    </div>
-                    <div class="related-card" onclick="showArticle1()">
-                        <div class="related-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/love.jpg?raw=true');"></div>
-                        <div class="related-content">
-                            <h3 class="related-card-title">Transcending Lust: The Path to Higher Forms of Love</h3>
-                            <p class="related-excerpt">Explore how we can evolve from desire-based relationships to higher-dimensional connections that merge mind, spirit, and soul.</p>
-                            <a class="read-more">Read More →</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Article Navigation -->
-        <div class="article-navigation">
-            <div class="nav-buttons">
-                <a class="nav-button back" onclick="showArticle3()">← Previous Article</a>
-                <a class="nav-button" onclick="showArticle5()">Next Article →</a>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-content">
-                <h3 class="footer-title">Join the Journey</h3>
-                <p class="footer-text">
-                    Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.
-                </p>
-                <div class="footer-links">
-                    <a onclick="showHomePage()">Home</a>
-                    <a onclick="showArticlesPage()">Articles</a>
-                    <a onclick="showAboutPage()">About</a>
-                    <a href="#">Contact</a>
-                </div>
-                <div class="footer-bottom">
-                    © 2025 Infinity Earth. Walking the path of transformation together.
-                </div>
-            </div>
-        </footer>
-    </section>
-
-    <!-- ARTICLE 5 PAGE -->
-    <section id="article-5-page" class="page-section article-page">
-        <!-- Breadcrumb -->
-        <div class="breadcrumb">
-            <div class="breadcrumb-container">
-                <a onclick="showHomePage()">Home</a> / <a onclick="showArticlesPage()">Articles</a> / The 6 Stages of Conflict Resolution
-        </div>
-
-        <!-- Article Header -->
-        <section class="article-header">
-            <div class="header-content">
-                <div class="article-category">Personal Growth</div>
-                <h1 class="article-title">The 6 Stages of Conflict Resolution</h1>
-                <div class="article-meta">
-                    <span>📅 Published: January 2025</span>
-                    <span>📖 6 min read</span>
-                    <span>💭 Jacqueline Yi</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Article Content -->
-        <article class="article-content">
-            <div class="content-section fade-in">
-                <p><strong>1. Stage One: Self-Focused Reaction</strong></p>
-                
-                <p>Only seeing your own perspective. Emotional. Feeling misunderstood, angry: <em>"Why are they treating me this way?"</em></p>
-                
-                <p><strong>2. Stage Two: Initial Reflection</strong></p>
-                
-                <p>Starting to examine your own role. Able to consider the other person's viewpoint: <em>"Could I have handled this better?"</em> <em>"Their reaction might have valid reasons."</em></p>
-                
-                <p><strong>3. Stage Three: Mature Understanding (Emotional Maturity)</strong></p>
-                
-                <p>Able to comprehend and accept others' limitations, seeing their struggles and constraints.</p>
-                
-                <p>With an open heart, you tolerate their behavior. Resolve conflict calmly.</p>
-                
-                <p>Like elders dealing with youth: Having experienced that stage themselves, they understand without overreacting.</p>
-                
-                <p>Those who practice "stepping back for a broader view", and resolve conflict peacefully, demonstrate genuine acceptance of others.</p>
-                
-                <p>Accepting others helps you accept yourself: You reflect on your mistakes, but also acknowledge your own efforts.</p>
-           
-                <p>You admit you sometimes err, acknowledge your faults, then improve and grow. Reaching this stage is true maturity. (This has nothing to do with age.)<p>
-           
-
-            <div class="content-section fade-in">
-                <p><strong>4. Stage Four: Psychological Awareness (Where Modern Psychology Stops)</strong></p>
-                
-                <p>Recognizing all behavior has underlying triggers. Hurtful actions often stem from past wounds:</p>
-                
-                <p>Example: People who constantly seek validation often lacked recognition earlier in life.</p>
-                
-                <p>Example: Those deprived of childhood love may cling to unhealthy relationships, terrified of abandonment.</p>
-                
-                <p><strong>What you lack internally, you seek externally.</strong></p>
-                
-                <p><strong>5. Stage Five: Seeing Interconnected Causes</strong></p>
-                
-                <p>Understand that events spring from <em>interwoven causality and synchronicity</em>, where all conditions merge</p>
-                
-                <p>Life's surface struggles feel like a temporary game— no need to obsess over gains/losses.</p>
-                
-                <p>Every experience helps your growth. Trust: <em>"This is happening for my development."</em></p>
-                
-                <p><strong>6. Stage Six: Unshakable Peace</strong></p>
-                
-                <p>Facing all events with undisturbed calm. Nothing disrupts your inner stillness.</p>
-                
-                <p>Observing without labeling things "good/bad" or "right/wrong."</p>
-                
-                <p>Watch life unfold like flowing water. Navigate worldly challenges, witness joys and sorrows— while abiding in deep peace and clarity.</p>
-            </div>
-        </article>
-
-        <!-- Related Articles -->
-        <section class="related-articles">
-            <div class="related-container">
-                <h2 class="related-title">Related Articles</h2>
-                <div class="related-grid">
-                    <div class="related-card" onclick="showArticle3()">
-                        <div class="related-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/friends.jpg?raw=true');"></div>
-                        <div class="related-content">
-                            <h3 class="related-card-title">The Judging Mind: The Root of Inequality</h3>
-                            <p class="related-excerpt">At their source, all things in the universe are equal. Explore how the judging mind creates artificial divisions and suffering.</p>
-                            <a class="read-more">Read More →</a>
-                        </div>
-                    </div>
-                    <div class="related-card" onclick="showArticle4()">
-                        <div class="related-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/thomas-de-luze-NAZI4uks8uw-unsplash.jpg?raw=true');"></div>
-                        <div class="related-content">
-                            <h3 class="related-card-title">Life is ultimately a solo journey</h3>
-                            <p class="related-excerpt">Living your own life well is the prerequisite for any healthy relationship. Discover how self-fulfillment leads to authentic connections.</p>
-                            <a class="read-more">Read More →</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Article Navigation -->
-        <div class="article-navigation">
-            <div class="nav-buttons">
-                <a class="nav-button back" onclick="showArticle4()">← Previous Article</a>
-                <a class="nav-button" onclick="showArticlesPage()">Back to Articles</a>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-content">
-                <h3 class="footer-title">Join the Journey</h3>
-                <p class="footer-text">
-                    Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.
-                </p>
-                <div class="footer-links">
-                    <a onclick="showHomePage()">Home</a>
-                    <a onclick="showArticlesPage()">Articles</a>
-                    <a onclick="showAboutPage()">About</a>
-                    <a href="#">Contact</a>
-                </div>
-                <div class="footer-bottom">
-                    © 2025 Infinity Earth. 
-                </div>
-            </div>
-        </footer>
-    </section>
-
-    <!-- ARTICLES PAGE -->
-    <section id="articles-page" class="page-section articles-page">
-        <div class="articles-container">
             <div class="articles-grid">
-                <!-- Featured Article Card 1 -->
-                <article class="article-card fade-in">
-                    <div class="article-image">
+                <!-- Article 1 -->
+                <div class="article-card" onclick="showArticle1()">
+                    <div class="article-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/love.jpg?raw=true')"></div>
+                    <div class="article-overlay">
                         <div class="article-number">01</div>
-                    </div>
-                    <div class="article-content">
                         <div class="article-category">Personal Growth</div>
-                        <h2 class="article-title">Transcending Lust: The Path to Higher Forms of Love</h2>
+                        <h3 class="article-title">Transcending Lust: The Path to Higher Forms of Love</h3>
+                        <p class="article-excerpt">Discover how we evolve from desire-based relationships to higher-dimensional connections that merge mind, spirit, and soul.</p>
                         <div class="article-meta">
-                            <span>Featured Article</span>
-                            <div class="read-time">
-                                <span>📖</span>
-                                <span>5 min read</span>
-                            </div>
+                            <span>5 min read</span>
+                            <span>10K readers</span>
                         </div>
-                        <p class="article-excerpt">
-                            Humans need to learn higher forms of love through experiencing lust and desire. 
-                            The prevalent form of love in contemporary society is rooted in physical attraction, 
-                            which primarily aims at self-satisfaction. However, we can evolve from desire-based 
-                            relationships to higher-dimensional connections that merge mind, spirit, and soul.
-                        </p>
-                        <a class="read-more" onclick="showArticle1()">Read Full Article</a>
+                        <div class="read-arrow"></div>
                     </div>
-                </article>
+                </div>
 
-                <!-- Article Card 2 -->
-                <article class="article-card fade-in">
-                    <div class="article-image">
+                <!-- Article 2 -->
+                <div class="article-card" onclick="showArticle2()">
+                    <div class="article-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/networking.jpg?raw=true')"></div>
+                    <div class="article-overlay">
                         <div class="article-number">02</div>
-                    </div>
-                    <div class="article-content">
-                        <div class="article-category">Personal Growth</div>
-                        <h2 class="article-title">Networking Up Begins with Self-Improvement</h2>
+                        <div class="article-category">Self-Improvement</div>
+                        <h3 class="article-title">Networking Up Begins with Self-Improvement</h3>
+                        <p class="article-excerpt">The people in your life resonate at a frequency similar to your own. Learn how inner transformation naturally elevates your social circle.</p>
                         <div class="article-meta">
-                            <span>Popular</span>
-                            <div class="read-time">
-                                <span>📖</span>
-                                <span>4 min read</span>
-                            </div>
+                            <span>4 min read</span>
+                            <span>8K readers</span>
                         </div>
-                        <p class="article-excerpt">
-                            The people in your life resonate at a frequency similar to your own. You naturally 
-                            attract those who share your vibration. If you're dissatisfied with the people around 
-                            you, the first step is to look inward and change yourself.
-                        </p>
-                        <a class="read-more" onclick="showArticle2()">Read Full Article</a>
+                        <div class="read-arrow"></div>
                     </div>
-                </article>
+                </div>
 
-                <!-- Article Card 3 -->
-                <article class="article-card fade-in">
-                    <div class="article-image">
+                <!-- Article 3 -->
+                <div class="article-card" onclick="showArticle3()">
+                    <div class="article-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/friends.jpg?raw=true')"></div>
+                    <div class="article-overlay">
                         <div class="article-number">03</div>
-                    </div>
-                    <div class="article-content">
                         <div class="article-category">Societal Reflection</div>
-                        <h2 class="article-title">The Judging Mind: The Root of Inequality</h2>
+                        <h3 class="article-title">The Judging Mind: The Root of Inequality</h3>
+                        <p class="article-excerpt">At their source, all things in the universe are equal. Explore how the judging mind creates artificial divisions and suffering.</p>
                         <div class="article-meta">
-                            <span>Deep Dive</span>
-                            <div class="read-time">
-                                <span>📖</span>
-                                <span>6 min read</span>
-                            </div>
+                            <span>6 min read</span>
+                            <span>12K readers</span>
                         </div>
-                        <p class="article-excerpt">
-                            At their source, all things in the universe are equal—without inherent distinction, 
-                            no high or low, no superior or inferior. As long as the judging mind exists in people, 
-                            inequality will persist.
-                        </p>
-                        <a class="read-more" onclick="showArticle3()">Read Full Article</a>
+                        <div class="read-arrow"></div>
                     </div>
-                </article>
-
-                <!-- Article Card 4 - Updated with new article -->
-                <article class="article-card fade-in">
-                    <div class="article-image">
-                        <div class="article-number">04</div>
-                    </div>
-                    <div class="article-content">
-                        <div class="article-category">Personal Growth</div>
-                        <h2 class="article-title">Life is ultimately a solo journey</h2>
-                        <div class="article-meta">
-                            <span>Self-Discovery</span>
-                            <div class="read-time">
-                                <span>📖</span>
-                                <span>5 min read</span>
-                            </div>
-                        </div>
-                        <p class="article-excerpt">
-                            Living your own life well is the prerequisite for any healthy relationship. A good relationship 
-                            means two people inspiring each other to become better. Only when you're in an uplifted state 
-                            can you attract kindred spirits.
-                        </p>
-                        <a class="read-more" onclick="showArticle4()">Read Full Article</a>
-                    </div>
-                </article>
-
-                <!-- Article Card 5 -->
-                <article class="article-card fade-in">
-                    <div class="article-image">
-                        <div class="article-number">05</div>
-                    </div>
-                    <div class="article-content">
-                        <div class="article-category">Personal Growth</div>
-                        <h2 class="article-title">Stages of Resolving Conflict</h2>
-                        <div class="article-meta">
-                            <span>Energy States</span>
-                            <div class="read-time">
-                                <span>📖</span>
-                                <span>6 min read</span>
-                            </div>
-                        </div>
-                        <p class="article-excerpt">
-                            Progress through six stages of consciousness—from self-focused reactions to unshakable peace. 
-                            Learn how to transform conflict into opportunities for growth and move toward higher energy states 
-                            of understanding and acceptance.
-                        </p>
-                        <a class="read-more" onclick="showArticle5()">Read Full Article</a>
-                    </div>
-                </article>
+                </div>
             </div>
-        </div>
+        </section>
+
+        <!-- Quote Section -->
+        <section class="quote-section">
+            <div class="quote-container">
+                <div class="quote-mark">"</div>
+                <p class="quote-text">The wound is the place where the Light enters you.</p>
+                <p class="quote-author">— Rumi, as interpreted through modern consciousness</p>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-bg-pattern"></div>
+            <div class="cta-content">
+                <h2 class="cta-title">Find Your Inner Peace</h2>
+                <p class="cta-description">Join thousands of readers on a journey of consciousness expansion and authentic self-discovery.</p>
+                <a href="#" class="cta-button" onclick="openSubscribeModal()">Start Your Journey</a>
+            </div>
+        </section>
 
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-content">
-                <h3 class="footer-title">Join the Journey</h3>
-                <p class="footer-text">
-                    Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.
-                </p>
-                <div class="footer-links">
-                    <a onclick="showHomePage()">Home</a>
-                    <a onclick="showArticlesPage()">Articles</a>
-                    <a onclick="showAboutPage()">About</a>
-                    <a href="#">Contact</a>
+                <div class="footer-brand">
+                    <h3>Infinity Earth</h3>
+                    <p>Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📧</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                    </div>
                 </div>
-                <div class="footer-bottom">
-                    © 2025 Infinity Earth. 
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="showHomePage()">Home</a></li>
+                        <li><a href="#" onclick="showArticlesPage()">Articles</a></li>
+                        <li><a href="#" onclick="showAboutPage()">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
                 </div>
+                <div class="footer-column">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Personal Growth</a></li>
+                        <li><a href="#">Relationships</a></li>
+                        <li><a href="#">Consciousness</a></li>
+                        <li><a href="#">Society</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Infinity Earth. Walking the path of transformation together.</p>
             </div>
         </footer>
     </section>
 
     <!-- ABOUT PAGE -->
-    <section id="about-page" class="page-section about-page">
-        <div class="about-section">
-            <!-- About Hero -->
-            <div class="about-hero fade-in-scroll">
-                <div class="about-hero-content">
-                    <h1 class="about-hero-name">Jacqueline Yi</h1>
-                </div>
-            </div>
-
-            <!-- About Content -->
-            <div class="about-content">
-                <h2 class="about-section-title">Why We Suffer and How We Can Transform</h2>
-                
-                <p class="about-text">
-                    "The wound is the place where the Light enters you."
-                </p>
-
-                <p class="about-text fade-in-scroll">
-                    We live in an age of unprecedented anxiety and disconnection. So many people today are drowning in anxiety, struggling with relationships, and feeling lost in life's complexities. The tragedy isn't that we're failing; it's that we lack the opportunity to discover a different way of being.
-                </p>
-
-                <p class="about-text fade-in-scroll">
-                    I know this intimately because I lived it. At sixteen, I was exactly like everyone else: anxious, stressed, unable to make sense of my relationships or my place in the world. Life felt like an endless series of problems I couldn't solve, and I saw no way forward.
-                </p>
-
-                <p class="about-text fade-in-scroll">
-                    Then I encountered something that changed everything, a teacher in China who introduced me to spiritual practice, meditation, and the profound wisdom of Chinese philosophy. This wasn't just learning; it was the beginning of complete transformation.
-                </p>
-
-                <p class="about-text fade-in-scroll">
-                    The journey demanded everything: deep self-exploration, confronting painful truths, and the courage to let go of who I thought I was. Through this process of constant evolution, I slowly became someone entirely different.
-                </p>
-
-                <p class="about-text fade-in-scroll">
-                    The results speak for themselves. Where there was once anxiety, I now experience calm. Where there was confusion, there is clarity. Where there was suffering, there is genuine bliss. This transformation was so profound that I felt compelled to share it with others.
-                </p>
-
-                <p class="about-text fade-in-scroll">
-                    Starting with social media last year, I've seen the tremendous impact these teachings can have. I continue this work because I believe everyone deserves the opportunity I was lucky enough to receive. I hope my content can help those who resonate with it, especially our generation who are deeply interested in philosophy and consciousness. Together, we can explore and build a life rooted in love, gratefulness, and compassion.
-                </p>
-
-                
+    <section id="about-page" class="page-section">
+        <div class="about-hero">
+            <div class="about-hero-content">
+                <h1>Jacqueline Yi</h1>
             </div>
         </div>
 
-        
+        <div class="about-content">
+            <p class="about-intro">
+                "In an age where machines think for us, we're finally forced to discover what makes us truly human."
+            </p>
+
+            <div class="about-grid">
+                <div class="about-section">
+                    <h3>The Beginning</h3>
+                    <p>Like many people, I spent my teens overwhelmed by anxiety and endless overthinking. Life felt like an impossible puzzle with no solution. Everything changed when I discovered meditation and Eastern philosophy through a mentor who saw my struggle. What began as a desperate search for relief became the foundation of a completely different way of being.</p>
+                </div>
+                <div class="about-section">
+                    <h3>The Transformation</h3>
+                    <p>Through consistent practice and deep self-inquiry, I learned that lasting change happens from within. The anxiety that once consumed me gradually gave way to inner calm. The mental chaos transformed into clarity. This journey revealed a fundamental truth: we all have the capacity for profound transformation—we just need the right guidance and commitment to the process.</p>
+                </div>
+            </div>
+
+            <div class="about-journey">
+                <h2 class="journey-title">Why I Write</h2>
+                <p class="journey-text">
+                    I write not from a place of superiority, but from deep recognition. I see my former self in every anxious mind, every restless heart seeking peace.
+After years of inner work and outer success, I realized that fulfillment brings responsibility. When you find your way out of pain, you naturally want to help others find theirs.
+The truth is simple: people in pain often cause pain. Those lacking love struggle to give love. Only when you fill your own cup can you pour into others.
+Our relentless pursuit of external material success has left our hearts empty. What is the meaning of life? What is the secret of happiness? Where do these philosophical and spiritual pursuits lead us? 
+These are the questions of our era. We could have avoided them once, but in the age of AI, we have no choice but to confront them.
+
+                </p>
+            </div>
+        </div>
+
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-content">
-                <h3 class="footer-title">Join the Journey</h3>
-                <p class="footer-text">
-                    Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.
-                </p>
-                <div class="footer-links">
-                    <a onclick="showHomePage()">Home</a>
-                    <a onclick="showArticlesPage()">Articles</a>
-                    <a onclick="showAboutPage()">About</a>
-                    <a href="#">Contact</a>
+                <div class="footer-brand">
+                    <h3>Infinity Earth</h3>
+                    <p>Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📧</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                    </div>
                 </div>
-                <div class="footer-bottom">
-                    © 2025 Infinity Earth. 
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="showHomePage()">Home</a></li>
+                        <li><a href="#" onclick="showArticlesPage()">Articles</a></li>
+                        <li><a href="#" onclick="showAboutPage()">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
                 </div>
+                <div class="footer-column">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Personal Growth</a></li>
+                        <li><a href="#">Relationships</a></li>
+                        <li><a href="#">Consciousness</a></li>
+                        <li><a href="#">Society</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Infinity Earth. Walking the path of transformation together.</p>
+            </div>
+        </footer>
+    </section>
+
+    <!-- ARTICLES PAGE -->
+    <section id="articles-page" class="page-section">
+        <div class="articles-hero">
+            <h1>All Articles</h1>
+            <p>Deep insights on consciousness, relationships, and personal transformation</p>
+        </div>
+
+        <div class="articles-filter">
+            <button class="filter-btn active" onclick="filterArticles('all')">All Articles</button>
+            <button class="filter-btn" onclick="filterArticles('personal')">Personal Growth</button>
+            <button class="filter-btn" onclick="filterArticles('relationships')">Relationships</button>
+            <button class="filter-btn" onclick="filterArticles('society')">Society</button>
+        </div>
+
+        <div class="articles-container">
+            <div class="articles-masonry">
+                <!-- Article Item 1 -->
+                <div class="article-item" data-category="personal" onclick="showArticle1()">
+                    <div class="article-item-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/love.jpg?raw=true')"></div>
+                    <div class="article-item-content">
+                        <div class="article-item-category">Personal Growth</div>
+                        <h3 class="article-item-title">Transcending Lust: The Path to Higher Forms of Love</h3>
+                        <p class="article-item-excerpt">Humans need to learn higher forms of love through experiencing lust and desire.</p>
+                        <div class="article-item-footer">
+                            <span>5 min read</span>
+                            <span>January 2025</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article Item 2 -->
+                <div class="article-item" data-category="personal" onclick="showArticle2()">
+                    <div class="article-item-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/networking.jpg?raw=true')"></div>
+                    <div class="article-item-content">
+                        <div class="article-item-category">Self-Improvement</div>
+                        <h3 class="article-item-title">Networking Up Begins with Self-Improvement</h3>
+                        <p class="article-item-excerpt">The people in your life resonate at a frequency similar to your own.</p>
+                        <div class="article-item-footer">
+                            <span>4 min read</span>
+                            <span>January 2025</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article Item 3 -->
+                <div class="article-item" data-category="society" onclick="showArticle3()">
+                    <div class="article-item-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/friends.jpg?raw=true')"></div>
+                    <div class="article-item-content">
+                        <div class="article-item-category">Societal Reflection</div>
+                        <h3 class="article-item-title">The Judging Mind: The Root of Inequality</h3>
+                        <p class="article-item-excerpt">At their source, all things in the universe are equal.</p>
+                        <div class="article-item-footer">
+                            <span>6 min read</span>
+                            <span>January 2025</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article Item 4 -->
+                <div class="article-item" data-category="personal" onclick="showArticle4()">
+                    <div class="article-item-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/thomas-de-luze-NAZI4uks8uw-unsplash.jpg?raw=true')"></div>
+                    <div class="article-item-content">
+                        <div class="article-item-category">Personal Growth</div>
+                        <h3 class="article-item-title">Life is ultimately a solo journey</h3>
+                        <p class="article-item-excerpt">Living your own life well is the prerequisite for any healthy relationship.</p>
+                        <div class="article-item-footer">
+                            <span>5 min read</span>
+                            <span>January 2025</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article Item 5 -->
+                <div class="article-item" data-category="personal" onclick="showArticle5()">
+                    <div class="article-item-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/marek-piwnicki-yQS4S4lzSY4-unsplash.jpg?raw=true')"></div>
+                    <div class="article-item-content">
+                        <div class="article-item-category">Personal Growth</div>
+                        <h3 class="article-item-title">The 6 Stages of Conflict Resolution</h3>
+                        <p class="article-item-excerpt">Progress through six stages of consciousness—from self-focused reactions to unshakable peace.</p>
+                        <div class="article-item-footer">
+                            <span>6 min read</span>
+                            <span>January 2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Infinity Earth</h3>
+                    <p>Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📧</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="showHomePage()">Home</a></li>
+                        <li><a href="#" onclick="showArticlesPage()">Articles</a></li>
+                        <li><a href="#" onclick="showAboutPage()">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Personal Growth</a></li>
+                        <li><a href="#">Relationships</a></li>
+                        <li><a href="#">Consciousness</a></li>
+                        <li><a href="#">Society</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Infinity Earth. Walking the path of transformation together.</p>
+            </div>
+        </footer>
+    </section>
+
+    <!-- INDIVIDUAL ARTICLE PAGES -->
+    <!-- Article 1 -->
+    <section id="article-1-page" class="page-section">
+        <div class="article-header" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/love.jpg?raw=true')">
+            <div class="article-header-content">
+                <div class="article-header-category">Personal Growth</div>
+                <h1 class="article-header-title">Transcending Lust: The Path to Higher Forms of Love</h1>
+                <div class="article-header-meta">
+                    <span>📅 January 2025</span>
+                    <span>📖 5 min read</span>
+                    <span>👁 10K readers</span>
+                </div>
+            </div>
+        </div>
+
+        <article class="article-content">
+            <p>Humans need to learn higher forms of love through experiencing lust and desire.</p>
+            
+            <p>The prevalent form of love in contemporary human society is rooted in physical attraction, lust, and desire which primarily aims at self-satisfaction and stems from our animalistic nature.</p>
+            
+            <p>Such relationships are often accompanied by pain and distress.</p>
+            
+            <p>However, lust should not be dismissed—it has its purpose.</p>
+
+            <div class="article-quote">
+                "Humans evolve from desire-based relationships to higher level connections, merging the mind, spirit, and soul."
+            </div>
+
+            <p>Humans evolve from desire-based relationships to higher level connections, merging the mind, spirit, and soul. This journey of learning through desire is a critical lesson.</p>
+            
+            <p>A meaningful relationship may begin with physical attraction but can grow into a higher-dimensional bond:</p>
+            
+            <h2>The Evolution of Love</h2>
+            
+            <p>Supporting each other during life's challenges. Seeing and becoming the best version of oneself. Nourishing the soul and enabling personal growth.</p>
+            
+            <p>This applies to all relationships.</p>
+            
+            <p>For relationships to be long-lasting, they must elevate in their energy.</p>
+            
+            <p>Remaining solely in the realm of lustful love is unstable. Even if the relationship doesn't end, it lacks vitality internally.</p>
+            
+            <p>At an even higher level, a relationship is no longer just for the benefit of two individuals. It becomes a partnership aimed at creating something greater and benefiting others.</p>
+            
+            <p>Love rooted in ego and self-interest brings pain. But through this, we can ascend toward true love—an unconditional, compassionate, and selfless love.</p>
+            
+            <p>Low-energy intimate relationships are an important pathway for human growth.</p>
+            
+            <p>Nothing is inherently good or bad. For a wise person, every experience becomes an opportunity to grow.</p>
+        </article>
+
+        <div class="article-nav">
+            <div class="article-nav-container">
+                <a href="#" class="article-nav-btn" onclick="showArticlesPage()">
+                    <span>←</span>
+                    <span>Back to Articles</span>
+                </a>
+                <a href="#" class="article-nav-btn" onclick="showArticle2()">
+                    <span>Next Article</span>
+                    <span>→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Infinity Earth</h3>
+                    <p>Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📧</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="showHomePage()">Home</a></li>
+                        <li><a href="#" onclick="showArticlesPage()">Articles</a></li>
+                        <li><a href="#" onclick="showAboutPage()">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Personal Growth</a></li>
+                        <li><a href="#">Relationships</a></li>
+                        <li><a href="#">Consciousness</a></li>
+                        <li><a href="#">Society</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Infinity Earth. Walking the path of transformation together.</p>
+            </div>
+        </footer>
+    </section>
+
+    <!-- Article 2 -->
+    <section id="article-2-page" class="page-section">
+        <div class="article-header" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/networking.jpg?raw=true')">
+            <div class="article-header-content">
+                <div class="article-header-category">Personal Growth</div>
+                <h1 class="article-header-title">Networking Up Begins with Self-Improvement</h1>
+                <div class="article-header-meta">
+                    <span>📅 January 2025</span>
+                    <span>📖 4 min read</span>
+                    <span>👁 8K+ readers</span>
+                </div>
+            </div>
+        </div>
+
+        <article class="article-content">
+            <h2>1. The people in your life resonate at a frequency similar to your own.</h2>
+            
+            <p>You naturally attract, and are attracted to, those who share your vibration. If you find yourself dissatisfied with the people around you, the first step is to look inward and change yourself.</p>
+            
+            <p>While this is often called "networking up," it's really about self-improvement. As you better yourself, your social circle will naturally elevate with you.</p>
+
+            <div class="article-quote">
+                "As you better yourself, your social circle will naturally elevate with you."
+            </div>
+
+            <h2>2. Seize the opportunity to make genuine friends while you're young.</h2>
+            
+            <p>This is why it's so important to make genuine friends while you're young. This isn't to say professional networking is unimportant; later in life, networking for resource exchange becomes inevitable.</p>
+            
+            <p>At that stage, connections are often built on the social value you provide. It becomes a transactional exchange, and the opportunity to make true friends diminishes.</p>
+            
+            <h2>3. On a deeper level, the people around you are mirrors reflecting parts of yourself.</h2>
+            
+            <p>You'll notice that your friends often share your traits. If a quality in someone strongly attracts you, it's likely a quality you either possess or wish you had.</p>
+            
+            <p>Conversely, if you strongly dislike a trait in others, you may dislike that same trait in yourself. Gaining this level of self-awareness requires introspection and isn't always obvious.</p>
+            
+            <h2>4. If socializing is something you enjoy, then fully embrace it.</h2>
+            
+            <p>Ultimately, the key is to be authentic. If you enjoy socializing, embrace it. If you prefer solitude, follow your heart.</p>
+            
+            <p>When you focus on what you love and excel at it, people who resonate with your frequency will naturally gravitate toward you.</p>
+        </article>
+
+        <div class="article-nav">
+            <div class="article-nav-container">
+                <a href="#" class="article-nav-btn" onclick="showArticle1()">
+                    <span>←</span>
+                    <span>Previous Article</span>
+                </a>
+                <a href="#" class="article-nav-btn" onclick="showArticle3()">
+                    <span>Next Article</span>
+                    <span>→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Infinity Earth</h3>
+                    <p>Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📧</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="showHomePage()">Home</a></li>
+                        <li><a href="#" onclick="showArticlesPage()">Articles</a></li>
+                        <li><a href="#" onclick="showAboutPage()">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Personal Growth</a></li>
+                        <li><a href="#">Relationships</a></li>
+                        <li><a href="#">Consciousness</a></li>
+                        <li><a href="#">Society</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Infinity Earth. Walking the path of transformation together.</p>
+            </div>
+        </footer>
+    </section>
+
+    <!-- Article 3 -->
+    <section id="article-3-page" class="page-section">
+        <div class="article-header" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/friends.jpg?raw=true')">
+            <div class="article-header-content">
+                <div class="article-header-category">Societal Reflection</div>
+                <h1 class="article-header-title">The Judging Mind: The Root of Inequality</h1>
+                <div class="article-header-meta">
+                    <span>📅 January 2025</span>
+                    <span>📖 6 min read</span>
+                    <span>👁 12K+ readers</span>
+                </div>
+            </div>
+        </div>
+
+        <article class="article-content">
+            <p>At their source, all things in the universe are equal. They are without inherent distinction—no high or low, no superior or inferior.</p>
+            
+            <p>Equality does not mean that everything is a carbon copy. It means seeing the world without a judging mind, without creating arbitrary divisions.</p>
+            
+            <p>For example, the existence of different skin tones is an objective reality. But the human-made standards that label one as "inferior" are subjective. The universe itself makes no such judgments.</p>
+
+            <div class="article-quote">
+                "As long as this judging mind exists in people, inequality will persist."
+            </div>
+
+            <p>As long as this judging mind exists in people, inequality will persist.</p>
+            
+            <p>Even if we were to achieve perfect economic equality, the judging mind would remain. It would simply find other traits, like physical appearance, to create new hierarchies of "superior" and "inferior."</p>
+            
+            <p>We usually try to fix inequality on the material level. But the judging mind is not a material problem; it exists on the plane of spirit and consciousness.</p>
+            
+            <p>Addressing this will be the great challenge of the coming age. We can only await its unfolding.</p>
+        </article>
+
+        <div class="article-nav">
+            <div class="article-nav-container">
+                <a href="#" class="article-nav-btn" onclick="showArticle2()">
+                    <span>←</span>
+                    <span>Previous Article</span>
+                </a>
+                <a href="#" class="article-nav-btn" onclick="showArticle4()">
+                    <span>Next Article</span>
+                    <span>→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Infinity Earth</h3>
+                    <p>Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📧</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="showHomePage()">Home</a></li>
+                        <li><a href="#" onclick="showArticlesPage()">Articles</a></li>
+                        <li><a href="#" onclick="showAboutPage()">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Personal Growth</a></li>
+                        <li><a href="#">Relationships</a></li>
+                        <li><a href="#">Consciousness</a></li>
+                        <li><a href="#">Society</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Infinity Earth. Walking the path of transformation together.</p>
+            </div>
+        </footer>
+    </section>
+
+    <!-- Article 4 -->
+    <section id="article-4-page" class="page-section">
+        <div class="article-header" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/thomas-de-luze-NAZI4uks8uw-unsplash.jpg?raw=true')">
+            <div class="article-header-content">
+                <div class="article-header-category">Personal Growth</div>
+                <h1 class="article-header-title">Life is ultimately a solo journey</h1>
+                <div class="article-header-meta">
+                    <span>📅 January 2025</span>
+                    <span>📖 5 min read</span>
+                    <span>👁 9K+ readers</span>
+                </div>
+            </div>
+        </div>
+
+        <article class="article-content">
+            <h2>1. Living your own life well is the prerequisite for any healthy relationship.</h2>
+            
+            <p>A good relationship means two people inspiring each other to become better. Only when you're in an uplifted state can you attract kindred spirits.</p>
+            
+            <p>When you're in a low state, you're more likely to attract toxic relationships. They're often clouded by possessiveness, obsession, and jealousy. These low-energy connections usually bring pain.</p>
+            
+            <p>When your soul is truly fulfilled, you'll realize that a good partner is a companion for mutual growth, not someone you cling to because you can't stand being alone.</p>
+            
+            <p>A fulfilling relationship is built by two grounded, emotionally stable individuals who support and empower each other to become the best version of themselves.</p>
+            
+            <p>But a toxic relationship often traps both in a cycle of taking. You know others can't give you what you need, yet you stay stuck because you're scared to walk away.</p>
+            
+            <p>When you're inwardly adrift, lacking love, attention, or validation, you grasp outward—hoping someone else will give you steady, unchanging love.</p>
+
+            <h2>2. What you seek is already within you.</h2>
+            
+            <p>When you're inwardly adrift, lacking love, attention, or validation, you grasp outward—hoping someone else will give you steady, unchanging love. You grow anxious over every reaction, every gesture. This may trap you in a toxic relationship, unable to leave.</p>
+            
+            <p>Looking outside for salvation, but everything is impermanent. Even if you grasp it briefly, you'll handle it with anxious care, trading away pieces of yourself just to hold on.</p>
+            
+            <h2>3. No one will live your life for you. You hold the reins of your own existence.</h2>
+            
+            <p>Don't wait for a savior to pull you from life's mud or emotional quicksand. The only one who can do this is yourself. You don't have to be perfect. It's okay to stumble sometimes. True, quality companions often appear when you're living earnestly, boldly being yourself and striving upward.</p>
+            
+            <h2>4. No matter who you live with or how close you are, life is ultimately lived alone.</h2>
+            
+            <p>Life, at its core, is a solo journey. No one can live it for you. Treasure the connections that cross your path. Then, carrying all the lessons, growth, love, and courage, begin the next journey.</p>
+            
+            <div class="article-quote">
+                "My heart is luminous—what more is there to say?"
+            </div>
+        </article>
+
+        <div class="article-nav">
+            <div class="article-nav-container">
+                <a href="#" class="article-nav-btn" onclick="showArticle3()">
+                    <span>←</span>
+                    <span>Previous Article</span>
+                </a>
+                <a href="#" class="article-nav-btn" onclick="showArticle5()">
+                    <span>Next Article</span>
+                    <span>→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Infinity Earth</h3>
+                    <p>Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📧</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="showHomePage()">Home</a></li>
+                        <li><a href="#" onclick="showArticlesPage()">Articles</a></li>
+                        <li><a href="#" onclick="showAboutPage()">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Personal Growth</a></li>
+                        <li><a href="#">Relationships</a></li>
+                        <li><a href="#">Consciousness</a></li>
+                        <li><a href="#">Society</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Infinity Earth. Walking the path of transformation together.</p>
+            </div>
+        </footer>
+    </section>
+
+    <!-- Article 5 -->
+    <section id="article-5-page" class="page-section">
+        <div class="article-header" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/marek-piwnicki-yQS4S4lzSY4-unsplash.jpg?raw=true')">
+            <div class="article-header-content">
+                <div class="article-header-category">Personal Growth</div>
+                <h1 class="article-header-title">The 6 Stages of Conflict Resolution</h1>
+                <div class="article-header-meta">
+                    <span>📅 January 2025</span>
+                    <span>📖 6 min read</span>
+                    <span>👁 7K+ readers</span>
+                </div>
+            </div>
+        </div>
+
+        <article class="article-content">
+            <h2>1. Stage One: Self-Focused Reaction</h2>
+            
+            <p>Only seeing your own perspective. Emotional. Feeling misunderstood, angry: <em>"Why are they treating me this way?"</em></p>
+            
+            <h2>2. Stage Two: Initial Reflection</h2>
+            
+            <p>Starting to examine your own role. Able to consider the other person's viewpoint: <em>"Could I have handled this better?"</em> <em>"Their reaction might have valid reasons."</em></p>
+            
+            <h2>3. Stage Three: Mature Understanding (Emotional Maturity)</h2>
+            
+            <p>Able to comprehend and accept others' limitations, seeing their struggles and constraints.</p>
+            
+            <p>With an open heart, you tolerate their behavior. Resolve conflict calmly.</p>
+            
+            <p>Like elders dealing with youth: Having experienced that stage themselves, they understand without overreacting.</p>
+            
+            <p>Those who practice "stepping back for a broader view", and resolve conflict peacefully, demonstrate genuine acceptance of others.</p>
+            
+            <p>Accepting others helps you accept yourself: You reflect on your mistakes, but also acknowledge your own efforts.</p>
+            
+            <p>You admit you sometimes err, acknowledge your faults, then improve and grow. Reaching this stage is true maturity. (This has nothing to do with age.)</p>
+
+            <h2>4. Stage Four: Psychological Awareness (Where Modern Psychology Stops)</h2>
+            
+            <p>Recognizing all behavior has underlying triggers. Hurtful actions often stem from past wounds:</p>
+            
+            <p>Example: People who constantly seek validation often lacked recognition earlier in life.</p>
+            
+            <p>Example: Those deprived of childhood love may cling to unhealthy relationships, terrified of abandonment.</p>
+            
+            <div class="article-quote">
+                "What you lack internally, you seek externally."
+            </div>
+            
+            <h2>5. Stage Five: Seeing Interconnected Causes</h2>
+            
+            <p>Understand that events spring from <em>interwoven causality and synchronicity</em>, where all conditions merge</p>
+            
+            <p>Life's surface struggles feel like a temporary game— no need to obsess over gains/losses.</p>
+            
+            <p>Every experience helps your growth. Trust: <em>"This is happening for my development."</em></p>
+            
+            <h2>6. Stage Six: Unshakable Peace</h2>
+            
+            <p>Facing all events with undisturbed calm. Nothing disrupts your inner stillness.</p>
+            
+            <p>Observing without labeling things "good/bad" or "right/wrong."</p>
+            
+            <p>Watch life unfold like flowing water. Navigate worldly challenges, witness joys and sorrows— while abiding in deep peace and clarity.</p>
+        </article>
+
+        <div class="article-nav">
+            <div class="article-nav-container">
+                <a href="#" class="article-nav-btn" onclick="showArticle4()">
+                    <span>←</span>
+                    <span>Previous Article</span>
+                </a>
+                <a href="#" class="article-nav-btn" onclick="showArticlesPage()">
+                    <span>Back to Articles</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Infinity Earth</h3>
+                    <p>Exploring consciousness, relationships, and transformation through authentic reflection and spiritual growth.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📧</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="showHomePage()">Home</a></li>
+                        <li><a href="#" onclick="showArticlesPage()">Articles</a></li>
+                        <li><a href="#" onclick="showAboutPage()">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Personal Growth</a></li>
+                        <li><a href="#">Relationships</a></li>
+                        <li><a href="#">Consciousness</a></li>
+                        <li><a href="#">Society</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Infinity Earth. Walking the path of transformation together.</p>
             </div>
         </footer>
     </section>
 
     <script>
-        // Page navigation functions
+        // Loading screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1000);
+        });
+
+        // Custom cursor
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Add hover effect to cursor
+        const hoverElements = document.querySelectorAll('a, button, .article-card, .article-item');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Subscribe Modal Functions
+        function openSubscribeModal() {
+            document.getElementById('subscribeModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSubscribeModal() {
+            document.getElementById('subscribeModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('subscribeModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                closeSubscribeModal();
+            }
+        });
+
+        // Handle subscription form
+        document.getElementById('subscribeForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = e.target.querySelector('input[type="email"]').value;
+            
+            // Simulate form submission
+            setTimeout(() => {
+                document.getElementById('subscribeForm').style.display = 'none';
+                document.getElementById('successMessage').classList.add('show');
+                
+                // Close modal after 3 seconds
+                setTimeout(() => {
+                    closeSubscribeModal();
+                    // Reset form
+                    document.getElementById('subscribeForm').style.display = 'flex';
+                    document.getElementById('successMessage').classList.remove('show');
+                    e.target.reset();
+                }, 3000);
+            }, 500);
+        });
+
+        // Page navigation
+        function hideAllPages() {
+            document.querySelectorAll('.page-section').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+        }
+
         function showHomePage() {
             hideAllPages();
             document.getElementById('home-page').classList.add('active');
@@ -1965,8 +2192,6 @@
             document.getElementById('articles-page').classList.add('active');
             document.getElementById('nav-articles').classList.add('active');
             window.scrollTo(0, 0);
-            // Re-trigger animations for articles page
-            observeElements();
         }
 
         function showAboutPage() {
@@ -1974,104 +2199,90 @@
             document.getElementById('about-page').classList.add('active');
             document.getElementById('nav-about').classList.add('active');
             window.scrollTo(0, 0);
-            // Re-trigger animations for about page
-            observeElements();
         }
 
         function showArticle1() {
             hideAllPages();
             document.getElementById('article-1-page').classList.add('active');
             window.scrollTo(0, 0);
-            observeElements();
         }
 
         function showArticle2() {
             hideAllPages();
             document.getElementById('article-2-page').classList.add('active');
             window.scrollTo(0, 0);
-            observeElements();
         }
 
         function showArticle3() {
             hideAllPages();
             document.getElementById('article-3-page').classList.add('active');
             window.scrollTo(0, 0);
-            observeElements();
         }
 
         function showArticle4() {
             hideAllPages();
             document.getElementById('article-4-page').classList.add('active');
             window.scrollTo(0, 0);
-            observeElements();
         }
 
         function showArticle5() {
             hideAllPages();
             document.getElementById('article-5-page').classList.add('active');
             window.scrollTo(0, 0);
-            observeElements();
         }
 
-        function hideAllPages() {
-            // Hide all page sections
-            document.querySelectorAll('.page-section').forEach(page => {
-                page.classList.remove('active');
-            });
-            // Remove active class from all nav links
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.classList.remove('active');
-            });
-        }
-
-        // Navbar scroll effect
-        window.addEventListener('scroll', () => {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 100) {
-                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-            } else {
-                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-            }
-        });
-
-        // Intersection Observer for fade-in animations
-        function observeElements() {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, observerOptions);
-
-            document.querySelectorAll('.fade-in, .fade-in-scroll').forEach(el => {
-                el.classList.remove('visible'); // Reset animation
-                observer.observe(el);
-            });
-        }
-
-        // Initialize animations on page load
-        observeElements();
-
-        // Parallax effect for hero section (only on home page)
-        window.addEventListener('scroll', () => {
-            if (document.getElementById('home-page').classList.contains('active')) {
-                const scrolled = window.pageYOffset;
-                const hero = document.querySelector('.hero');
-                if (hero) {
-                    const rate = scrolled * -0.5;
-                    hero.style.transform = `translateY(${rate}px)`;
+        // Article filtering
+        function filterArticles(category) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            const articles = document.querySelectorAll('.article-item');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            articles.forEach(article => {
+                if (category === 'all' || article.getAttribute('data-category') === category) {
+                    article.style.display = 'block';
+                } else {
+                    article.style.display = 'none';
                 }
+            });
+        }
+
+        // Parallax effect
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroBg = document.querySelector('.hero-bg');
+            if (heroBg) {
+                heroBg.style.transform = `translateY(${scrolled * 0.5}px)`;
             }
         });
 
-        // Set home as active on initial load
-        document.getElementById('nav-home').classList.add('active');
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all article cards
+        document.querySelectorAll('.article-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Escape key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeSubscribeModal();
+            }
+        });
     </script>
 </body>
 </html>
