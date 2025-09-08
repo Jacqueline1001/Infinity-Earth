@@ -715,7 +715,7 @@
 
         /* ABOUT PAGE */
         .about-hero {
-            height: 60vh;
+            height: 70vh;
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
                         url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/DEFB3CF5-C9E5-4DDE-B564-B98A721C62B7-19465-00001DE59CF2F778.jpg?raw=true') center/cover;
             display: flex;
@@ -726,6 +726,21 @@
             position: relative;
         }
 
+        .about-hero-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+
+        
         .about-hero-content h1 {
             font-size: 4rem;
             font-weight: 700;
@@ -733,6 +748,17 @@
             margin-bottom: 1rem;
             animation: fadeInUp 1s ease-out;
         }
+
+        .about-hero-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+    font-weight: 300;
+    line-height: 1.5;
+    animation: fadeInUp 1s ease-out 0.2s both;
+    }
+
 
         .about-hero-content p {
             font-size: 1.2rem;
@@ -746,6 +772,13 @@
             padding: 6rem 2rem;
         }
 
+        .about-opening {
+            font-style: italic;
+    text-align: center;
+    padding: 6rem 0 4rem;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 4rem;
+}
         .about-intro {
             font-size: 1.8rem;
             font-weight: 300;
@@ -1410,16 +1443,25 @@
 
     <!-- ABOUT PAGE -->
     <section id="about-page" class="page-section">
-        <div class="about-hero">
-            <div class="about-hero-content">
-                <h1>Jacqueline Yi</h1>
-            </div>
+    <!-- Hero Section with better visual hierarchy -->
+    <div class="about-hero">
+        <div class="about-hero-content">
+    
+            <h1>Jacqueline Yi</h1>
+            <p class="about-hero-subtitle">Bridging ancient wisdom with modern life</p>
         </div>
+    </div>
 
-        <div class="about-content">
+    <div class="about-content">
+
+         <div class="about-opening">
             <p class="about-intro">
                 "In our modern world, the simplest truths become the most profound."
             </p>
+            <p class="about-context">
+                From overwhelming anxiety to inner peace, transformation and its insights along this journey are both deeply personal and meant to be shared. What started as my own desperate search for healing has become my life's work—helping others access the philosophical insights that fundamentally changed my existence.
+            </p>
+        </div>
 
             <div class="about-grid">
                 <div class="about-section">
@@ -1439,7 +1481,7 @@ In our AI-driven age, we're forced to rediscover what makes us uniquely human. E
                 <h2 class="journey-title">Why I Write</h2>
                 <p class="journey-text">
                     I write from recognition, not superiority. I see my former anxious self in every restless heart seeking peace. After years of inner work, I've learned that finding your way out of pain brings responsibility - when you heal, you naturally want to help others heal too.
-Our relentless pursuit of external success has left many hearts empty. In the age of AI, we can no longer avoid the fundamental questions: What gives life meaning? How do we find lasting happiness? These philosophical pursuits aren't luxury - they're necessity.
+Our relentless pursuit of external success has left many hearts empty. In the age of unprecedented technology, we can no longer avoid the fundamental questions: What gives life meaning? How do we find lasting happiness? These philosophical pursuits aren't luxury - they're necessity.
 I share these insights because practical wisdom shouldn't remain locked in ancient texts. It should be accessible, applicable, and integrated into how we navigate modern challenges
 
                 </p>
@@ -1500,7 +1542,7 @@ I share these insights because practical wisdom shouldn't remain locked in ancie
         <div class="articles-container">
             <div class="articles-masonry">
                 <!-- Article Item 1 -->
-                <div class="article-item" data-category="personal" onclick="showArticle1()">
+                <div class="article-item" data-category="relationships" onclick="showArticle1()">
                     <div class="article-item-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/love.jpg?raw=true')"></div>
                     <div class="article-item-content">
                         <div class="article-item-category">Relationships</div>
@@ -1514,7 +1556,7 @@ I share these insights because practical wisdom shouldn't remain locked in ancie
                 </div>
 
                 <!-- Article Item 2 -->
-                <div class="article-item" data-category="personal" onclick="showArticle2()">
+                <div class="article-item" data-category="relationships" onclick="showArticle2()">
                     <div class="article-item-image" style="background-image: url('https://github.com/Jacqueline1001/uclchineseartsoc/blob/main/networking.jpg?raw=true')"></div>
                     <div class="article-item-content">
                         <div class="article-item-category">Relationships</div>
